@@ -4,8 +4,7 @@ namespace Dawnstar\Developer;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use Innoio\Developer\Http\Middleware\IsDeveloper;
-use Innoio\Developer\Providers\RouteServiceProvider;
+use Dawnstar\Developer\Providers\RouteServiceProvider;
 
 class DeveloperServiceProvider extends ServiceProvider
 {

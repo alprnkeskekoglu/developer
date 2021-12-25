@@ -12,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::middleware(['web',])
                 ->prefix('dawnstar/developer')
-                ->as('developer.')
+                ->as('dawnstar.developer.')
                 ->group(__DIR__.'/../Routes/panel.php');
         });
     }
