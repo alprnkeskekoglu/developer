@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
-use Dawnstar\Models\Admin;
+use Dawnstar\Core\Models\Admin;
 use Symfony\Component\Process\Process;
 
 class DatabaseBackupController extends Controller

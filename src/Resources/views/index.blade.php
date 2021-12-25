@@ -1,7 +1,7 @@
-@extends('Dawnstar::layouts.app')
+@extends('Core::layouts.app')
 
 @section('content')
-    @include('Dawnstar::includes.page_header',['headerTitle' => __('Developer::general.title')])
+    @include('Core::includes.page_header',['headerTitle' => __('Developer::general.title')])
     <div class="row">
         <div class="col-12">
             <div class="card">

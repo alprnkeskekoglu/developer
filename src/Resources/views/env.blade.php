@@ -1,7 +1,7 @@
-@extends('Dawnstar::layouts.app')
+@extends('Core::layouts.app')
 
 @section('content')
-    @include('Dawnstar::includes.page_header',['headerTitle' => __('Developer::general.box.env_edit')])
+    @include('Core::includes.page_header',['headerTitle' => __('Developer::general.box.env_edit')])
     <div class="row">
         <div class="col-12">
             <div class="card">
