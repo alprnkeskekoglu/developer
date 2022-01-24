@@ -2,76 +2,81 @@
 
 namespace Dawnstar\Developer\Http\Controllers;
 
+use Dawnstar\Developer\Http\Services\BreadcrumbService;
+use Dawnstar\Developer\Http\Services\DeveloperService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\View;
-use Symfony\Component\Process\Process;
 
+/**
+ * Class DeveloperController
+ * @package Dawnstar\Developer\Http\Controllers
+ */
 class DeveloperController extends Controller
 {
+    /** @var BreadcrumbService */
+    private $breadcrumbService;
+    /** @var DeveloperService */
+    private $developerService;
+
+    /**
+     * @param BreadcrumbService $breadcrumbService
+     * @param DeveloperService $developerService
+     */
+    public function __construct(BreadcrumbService $breadcrumbService, DeveloperService $developerService)
+    {
+        $this->breadcrumbService = $breadcrumbService;
+        $this->developerService = $developerService;
+    }
+
+    /**
+     * @return View
+     */
     public function index()
     {
         return view('Developer::index');
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse|string
+     */
     public function command(Request $request)
     {
-        $type = $request->get('type');
-
-        if ($type) {
-            Artisan::call("$type:clear");
-
-            return response()->json(['message' => Artisan::output()], 200);
-        }
-        return 'ERROR';
+        return $this->developerService->executeClearCommand($request->get('type'));
     }
 
+    /**
+     * @return View
+     */
     public function env()
     {
-        $breadcrumb = [
-            [
-                'name' => __('DeveloperLang::general.title'),
-                'url' => route('dawnstar.developer.index')
-            ],
-            [
-                'name' => __('DeveloperLang::general.box.env_edit'),
-                'url' => 'javascript:void(0)'
-            ]
-        ];
-        $env = file_get_contents(base_path('.env'));
+        $breadcrumb = $this->breadcrumbService->getEnvBreadcrumb();
+        $env = $this->developerService->getEnv();
+
         return view('Developer::env', compact('env', 'breadcrumb'));
     }
 
-    public function envUpdate(Request $request)
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateEnv(Request $request)
     {
-        $env = $request->get('env');
+        $this->developerService->updateEnv($request->get('env'));
 
-        if ($env) {
-            file_put_contents(base_path('.env'), $env);
-        }
         return redirect()->route('dawnstar.developer.index');
     }
 
+    /**
+     * @return RedirectResponse
+     */
     public function maintenance()
     {
-        $value = env('DAWNSTAR_MAINTENANCE', false) == true ? 'false' : 'true';
+        $this->developerService->setMaintenanceMode();
 
-        $env = file_get_contents(base_path('.env'));
-
-        $env = str_replace([
-            "\nDAWNSTAR_MAINTENANCE=false\n",
-            "\nDAWNSTAR_MAINTENANCE=false",
-            "DAWNSTAR_MAINTENANCE=false\n",
-            "DAWNSTAR_MAINTENANCE=false",
-            "\nDAWNSTAR_MAINTENANCE=true\n",
-            "\nDAWNSTAR_MAINTENANCE=true",
-            "DAWNSTAR_MAINTENANCE=true\n",
-            "DAWNSTAR_MAINTENANCE=true",
-        ], '', $env);
-        $env .= "\nDAWNSTAR_MAINTENANCE=" . $value . "\n";
-
-        file_put_contents(base_path('.env'), $env);
         return redirect()->route('dawnstar.developer.index');
     }
 }
