@@ -1,12 +1,13 @@
 <?php
-use Dawnstar\Developer\Http\Controllers\DeveloperController;
+
 use Dawnstar\Developer\Http\Controllers\DatabaseBackupController;
+use Dawnstar\Developer\Http\Controllers\DeveloperController;
 use Dawnstar\Developer\Http\Controllers\VcsController;
 
 Route::get('/', [DeveloperController::class, 'index'])->name('index');
 Route::get('/command', [DeveloperController::class, 'command'])->name('command');
 Route::get('/env', [DeveloperController::class, 'env'])->name('env');
-Route::put('/env', [DeveloperController::class, 'envUpdate'])->name('env.update');
+Route::put('/env', [DeveloperController::class, 'updateEnv'])->name('env.update');
 Route::post('/maintenance', [DeveloperController::class, 'maintenance'])->name('maintenance');
 
 Route::prefix('database')->as('database.')->group(function () {
